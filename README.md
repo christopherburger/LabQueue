@@ -32,27 +32,27 @@ Frontend: HTML5, CSS3, HTMX
 ### 1. Clone the repository and install dependencies
 
 
-`git clone https://github.com/yourusername/lab_queue.git'
+`git clone https://github.com/yourusername/lab_queue.git`
 
-'cd lab_queue'
+`cd lab_queue`
 
-'pip install flask python-dateutil better_profanity'
+`pip install flask python-dateutil better_profanity`
 
 ### 2. Set the TA Password Environment Variable
 
 Generate a secure password hash using the Werkzeug library:
 
-`python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('your_secure_password'))"'
+`python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('your_secure_password'))"`
 
 Set the output string as an environment variable named TA_PASSWORD_HASH.
 
-Windows (PowerShell): '$env:TA_PASSWORD_HASH = "scrypt:..."'
+Windows (PowerShell): `$env:TA_PASSWORD_HASH = "scrypt:..."`
 
-Mac/Linux: 'export TA_PASSWORD_HASH="scrypt:..."'
+Mac/Linux: `export TA_PASSWORD_HASH="scrypt:..."`
 
 ### 3. Run the application
 
-`python app.py'
+`python app.py`
 
 The application will be available at http://127.0.0.1:5000.
 
@@ -65,20 +65,21 @@ You can easily adapt the application for different semesters or lab setups by ed
 #### Define the active lab rooms. 
 
 #### Key = Internal code, Value = Display name on tabs
-
+```
 ROOMS = {
     'A': 'Room 101',
     'B': 'Room 205',
     'C': 'Room 303'
 }
+```
 
 #### Toggle to hide student names from other non-TA users
 
-PRIVACY_MODE = True 
+`PRIVACY_MODE = True `
 
 #### Add custom campus-specific banned terms
 
-BANNED_WORDS = ['custom_slang_1', 'custom_slang_2'] 
+`BANNED_WORDS = ['custom_slang_1', 'custom_slang_2'] `
 
 ## File Structure
 
