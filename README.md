@@ -1,7 +1,7 @@
 # Lightweight Academic Lab Queue
-A fast, mobile-friendly, and secure queuing system designed for academic programming labs. Built with Python, Flask, and HTMX, this application allows students to request help across multiple lab rooms while providing Teaching Assistants (TAs) with a clean, real-time dashboard to manage and resolve requests.
+A fast, mobile-friendly, queuing system designed for academic programming labs. Built with Python, Flask, and HTMX, this application allows students to request help across multiple lab rooms while providing Teaching Assistants (TAs) with a clean, real-time dashboard to manage and resolve requests.
 
-The system is designed to be completely ephemeral for students (no accounts or passwords required) while maintaining strict accountability and privacy standards for an academic intranet environment.
+The system is designed to be completely ephemeral for students (no accounts or passwords required) while maintaining accountability and privacy standards for an academic intranet environment.
 
 ## Major Features
 
@@ -23,36 +23,36 @@ Input Sanitization & Profanity Filtering: Integrated better_profanity checks and
 
 Backend: Python 3, Flask
 
-Database: SQLite3 (Local file-based, ephemeral-friendly)
+Database: SQLite3 
 
-Frontend: HTML5, CSS3, HTMX (for lightweight AJAX requests)
-
-Security: werkzeug.security (Scrypt), better_profanity
+Frontend: HTML5, CSS3, HTMX 
 
 ## Setup & Installation
 
 ### 1. Clone the repository and install dependencies
 
 
-`git clone https://github.com/yourusername/lab_queue.git
-`cd lab_queue
-`pip install flask python-dateutil better_profanity
+`git clone https://github.com/yourusername/lab_queue.git'
+
+'cd lab_queue'
+
+'pip install flask python-dateutil better_profanity'
 
 ### 2. Set the TA Password Environment Variable
 
 Generate a secure password hash using the Werkzeug library:
 
-`python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('your_secure_password'))"
+`python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('your_secure_password'))"'
 
 Set the output string as an environment variable named TA_PASSWORD_HASH.
 
-Windows (PowerShell): $env:TA_PASSWORD_HASH = "scrypt:..."
+Windows (PowerShell): '$env:TA_PASSWORD_HASH = "scrypt:..."'
 
-Mac/Linux: export TA_PASSWORD_HASH="scrypt:..."
+Mac/Linux: 'export TA_PASSWORD_HASH="scrypt:..."'
 
 ### 3. Run the application
 
-`python app.py
+`python app.py'
 
 The application will be available at http://127.0.0.1:5000.
 
