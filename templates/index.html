@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lab Queue</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 1rem; background: #fafafa; }
+
+        /* Mobile-First Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; font-weight: 600; color: #444; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em; }
+        td { font-size: 16px; } /* 16px prevents iOS zoom on focus */
+
+        /* Button Styling */
+        .btn {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            /* Touch target size optimization */
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary { background: #007bff; color: white; width: 100%; box-sizing: border-box; font-size: 16px;}
+        .btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+        .btn-danger:active { background: #fecaca; }
+
+        /* Nav & Headers */
+        .nav { margin-bottom: 20px; text-align: right; font-size: 0.9em; }
+        .nav a { color: #666; text-decoration: none; padding: 10px; display: inline-block; }
+
+        h1 { margin-bottom: 0.5rem; font-size: 1.8rem; color: #333; }
+
+        /* Room Tabs - Mobile Friendly Wrap */
+        .room-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 0; }
+        .room-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 10px;
+            text-decoration: none;
+            color: #666;
+            background: #f1f1f1;
+            border-radius: 8px 8px 0 0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .room-tab.active {
+            background: #fff;
+            color: #007bff;
+            font-weight: bold;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            border-bottom: 2px solid #007bff;
+            margin-bottom: -2px;
+        }
+
+        /* Forms */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px; /* Prevents zoom on mobile */
+            box-sizing: border-box;
+        }
+
+        /* Messages */
+        .msg-box { padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .msg-join { background: white; border: 1px solid #e5e7eb; }
+        .msg-active { background: #eff6ff; border: 1px solid #dbeafe; color: #1e40af; }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body { padding: 0.5rem; }
+            h1 { font-size: 1.5rem; }
+            th, td { padding: 10px; }
+            /* Hide Time on very small screens if needed, or shorten it */
+            .time-col { min-width: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        {% if is_ta %}
+            <strong>TA Mode</strong> | <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">TA Login</a>
+        {% endif %}
+    </div>
+
+<h1>Lab Queue <span style="color:#aaa; font-weight:normal; font-size:0.6em;">{{ rooms[current_room] }}</span></h1>
+
+    <div class="room-tabs">
+    {% for code, name in rooms.items() %}
+        <a href="/set_room/{{ code }}" class="room-tab {% if current_room == code %}active{% endif %}">
+            {{ name }}
+        </a>
+    {% endfor %}
+</div>
+
+    {% if not is_ta and not my_id %}
+
+        {% if session.student_name %}
+        <div class="msg-box msg-join">
+            <p style="margin-top:0; margin-bottom:1rem;">
+                Hi <strong>{{ session.student_name }}</strong>
+                {% if session.student_seat %}
+                    (Seat {{ session.student_seat }})
+                {% endif %}.
+            </p>
+            <form action="/join" method="POST">
+                <button type="submit" class="btn btn-primary">Join Room {{ rooms[current_room] }} Queue</button>
+            </form>
+            <div style="margin-top:15px; text-align:center;">
+                <a href="/student/reset" style="color: #888; text-decoration:none; font-size: 0.9em;">Not you? Switch User</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="msg-box msg-join">
+            <form action="/join" method="POST">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="text" name="seat" placeholder="Seat Number (Optional)">
+                <button type="submit" class="btn btn-primary">Join Queue</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% elif my_id %}
+
+        <div class="msg-box msg-active">
+            <p style="margin-top:0; font-weight: 600; font-size: 1.1em;">
+                You are in the queue for Room {{ rooms[ticket_room] }}.
+            </p>
+
+            <form action="/cancel" method="POST" style="margin-top:10px;">
+                <button type="submit" class="btn" style="background:white; border:1px solid #ccc; color:#555; width:100%;">Cancel Request</button>
+            </form>
+
+            {% if ticket_room != current_room %}
+            <p style="font-size: 0.85em; color: #d97706; margin-bottom:0; margin-top:10px;">
+                ⚠ You are looking at Room {{ rooms[current_room]}}, but your request is in Room {{ rooms[ticket_room]}}.
+            </p>
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+
+                <th>Name</th>
+                <th>Seat</th>
+                <th class="time-col">Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="queue-list" hx-get="/" hx-trigger="every 5s" hx-swap="innerHTML">
+            {% include 'partial_queue.html' %}
+        </tbody>
+    </table>
+
+</body>
+</html>
