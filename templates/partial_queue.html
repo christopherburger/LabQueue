@@ -1,0 +1,54 @@
+{% for student in queue %}
+<tr>
+
+
+    <td style="font-weight:500;">
+        {% if is_ta or not privacy_mode or student.id == my_id %}
+            {{ student.name }}
+        {% else %}
+            <span style="color:#aaa; font-style:italic;">Student Waiting</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if is_ta or not privacy_mode or student.id == my_id %}
+            {{ student.seat or '—' }}
+        {% else %}
+            <span style="color:#ccc;">—</span>
+        {% endif %}
+    </td>
+    <td class="time-col" style="color:#666; font-size:0.9em;">
+        {{ student.timestamp | format_time }}
+    </td>
+    <td>
+        {% if is_ta %}
+            <form action="/resolve/{{ student.id }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">Resolve</button>
+            </form>
+        {% elif student.id == my_id %}
+            <form action="/cancel" method="POST" style="display:inline;">
+                <button type="submit" class="btn" style="border:1px solid #ccc;">Cancel</button>
+            </form>
+        {% else %}
+            <span style="color:#ccc;">—</span>
+        {% endif %}
+    </td>
+</tr>
+
+{% else %}
+<tr>
+    <td colspan="4" style="text-align:center; color: #999; padding: 30px;">
+        Room is empty.
+    </td>
+</tr>
+{% endfor %}
+
+{% if not my_id %}
+<script>
+    // ...but the screen still shows a "Cancel" button...
+    if (document.querySelector('form[action="/cancel"]')) {
+        // ...force the page to reload to show the "Join" form.
+        window.location.reload();
+    }
+</script>
+{% endif %}
