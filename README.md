@@ -60,8 +60,6 @@ The application will be available at http://127.0.0.1:5000.
 
 You can easily adapt the application for different semesters or lab setups by editing the configuration variables at the top of app.py:
 
-# --- CONFIGURATION ---
-
 #### Define the active lab rooms. 
 
 #### Key = Internal code, Value = Display name on tabs
