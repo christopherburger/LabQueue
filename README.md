@@ -17,7 +17,7 @@ IP-Based Audit Logging: All queue joins, cancellations, and resolutions are logg
 
 Anti-Spam Rate Limiting: Built-in SQLite checks prevent the same IP address from joining the queue more than once every 60 seconds.
 
-Input Sanitization & Profanity Filtering: Integrated better_profanity checks and character limits automatically silently reject inappropriate or overly long names.
+Input Sanitization & Profanity Filtering: Integrated better_profanity checks and character limits automatically silently reject inappropriate or overly long names. Note that the profanity filtering has not been exhaustively tested and by default is set to off.
 
 ## Tech Stack
 
@@ -58,7 +58,9 @@ The application will be available at http://127.0.0.1:5000.
 
 ## Configuration
 
-You can easily adapt the application for different semesters or lab setups by editing the configuration variables at the top of app.py:
+You can easily adapt the application for different semesters or lab setups by editing the configuration variables at the top of app.py.
+
+You will may need to adjust the time formatting based on your location.
 
 #### Define the active lab rooms. 
 
