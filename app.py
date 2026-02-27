@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 from better_profanity import profanity
 
 app = Flask(__name__)
-app.secret_key = 'demo'
+app.secret_key = 'demo' #Make sure to change the key from this placeholder
 app.permanent_session_lifetime = timedelta(minutes=120)
 
 
@@ -57,8 +57,8 @@ def format_time(value):
         # Use %I if you want 03:45 PM
 
 
-        #OFFSET FOR PYTHONANYWHERE
-        dt = dt + timedelta(hours=-6)
+        #OFFSET FOR PYTHONANYWHERE 
+        #dt = dt + timedelta(hours=-6)
 
         return dt.strftime("%-I:%M %p")
     except:
