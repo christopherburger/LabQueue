@@ -5,7 +5,7 @@ The system is designed to be completely ephemeral for students (no accounts or p
 
 ## Major Features
 
-No Login Required: Students join the queue using only their Name and Seat Number (optional).
+No Login Required: Students join the queue using only their Name (required) and Seat Number (optional).
 
 Persistent Sessions: A 120-minute session cookie remembers the student's identity, allowing for 1-click "Quick Re-join" for subsequent requests during the same lab period.
 
